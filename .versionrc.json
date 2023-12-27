@@ -1,0 +1,8 @@
+{
+  "firstRelease": true,
+  "releaseCommitMessageFormat": "chore: release {{currentTag}}",
+  "skip": {
+    "bump": true
+  },
+  "tagPrefix": "V"
+}

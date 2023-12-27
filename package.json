@@ -1,0 +1,24 @@
+{
+  "author": "Aziz Da <azizdawhat@gmail.com>",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "description": "Musiclike (web) typography modules.",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "commit-and-tag-version": "^12.0.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0"
+  },
+  "license": "GPL-3.0-or-later",
+  "name": "musiclike",
+  "private": true,
+  "repository": "github:azizdawhat/musiclike",
+  "scripts": {},
+  "type": "module",
+  "workspaces": [
+    "./packages/*"
+  ]
+}
