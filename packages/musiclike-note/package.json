@@ -1,0 +1,31 @@
+{
+  "author": "Aziz Da <azizdawhat@gmail.com>",
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.23.7"
+  },
+  "description": "Note wraps and parses a CSS <length> to use it as a number.",
+  "exports": {
+    "types": "./dist/Note.d.ts",
+    "import": "./dist/Note.js",
+    "require": "./dist/Note.cjs"
+  },
+  "license": "GPL-3.0-or-later",
+  "main": "./dist/Note.cjs",
+  "name": "@musiclike/note",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "directory": "./packages/musiclike-note",
+    "type": "git",
+    "url": "https://github.com/azizdawhat/musiclike.git"
+  },
+  "scripts": {
+    "build": "concurrently --raw \"rollup --config \\\"./rollup.config.js\\\"\" \"tsc --project \\\"./tsconfig.json\\\"\"",
+    "prebuild": "del --verbose \"./dist/*\"",
+    "test": "mocha --config \"./.mocharc.jsonc\""
+  },
+  "type": "module",
+  "types": "./dist/Note.d.ts",
+  "version": "0.1.0"
+}
