@@ -24,7 +24,7 @@ const options = [
       {
         dir: './dist',
         entryFileNames: '[name].cjs',
-        exports: 'auto',
+        exports: 'named',
         format: 'commonjs',
       },
       {
