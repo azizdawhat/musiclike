@@ -1,11 +1,9 @@
-import call from './Note.call.js';
-/* eslint-disable function-paren-newline, indent, no-use-before-define */
-@call
+/* eslint-disable comma-dangle, no-use-before-define */
 class Note {
   /**
+   * @memberof Note
    * @readonly
    * @static
-   * @memberof Note
    */
   static get LenUNITS() {
     return Object.freeze(
@@ -60,7 +58,6 @@ class Note {
         'vmax',
         'vmin',
         'vw',
-        // eslint-disable-next-line comma-dangle
       ])
     );
   }
@@ -70,14 +67,15 @@ class Note {
    */ // eslint-disable-next-line consistent-return
   static parseLenUnit(length) {
     if (isSymbol(length)) {
-      // prettier-ignore
-      throw new TypeError('length is of type symbol! Not appropriate for String coercion.',
-      { cause: { value: length } });
+      throw new TypeError('length is of type symbol! Not appropriate for String coercion.', {
+        cause: { value: length },
+      });
     }
 
     const value = Number.parseFloat(length);
 
     if (Number.isFinite(value) && value) {
+      /** @type {Array<(typeof Note)['LenUNITS'][number]>} */
       const [lenUnit] = `${length}`.match(/\D+$/) ?? [];
 
       if (lenUnit) {
@@ -96,13 +94,13 @@ class Note {
 
   /**
    * @param {Note|number|string} [length]
-   * @param {(typeof Note)['LenUNITS'][number]} [unit]
+   * @param {(typeof Note)['LenUNITS'][number]} [lenUnit]
    */
-  constructor(length, unit) {
+  constructor(length, lenUnit) {
     if (isSymbol(length)) {
-      // prettier-ignore
-      throw new TypeError('length is of type symbol! Not appropriate for String coercion.',
-      { cause: { value: length } });
+      throw new TypeError('length is of type symbol! Not appropriate for String coercion.', {
+        cause: { value: length },
+      });
     }
 
     this.#value = Number.parseFloat(length);
@@ -111,18 +109,20 @@ class Note {
       this.#lenUnit = /** @type {typeof Note} */ (this.constructor).parseLenUnit(length);
 
       if (!this.#lenUnit) {
-        // prettier-ignore
-        if (!isObject(unit) && !isString(unit) && unit) {
-          if (isSymbol(unit)) {
-            throw new TypeError('unit is of type symbol! Not appropriate for String coercion.',
-            { cause: { value: unit } });
+        if (!isObject(lenUnit) && !isString(lenUnit) && lenUnit) {
+          if (isSymbol(lenUnit)) {
+            throw new TypeError('lenUnit is of type symbol! Not appropriate for String coercion.', {
+              cause: { value: lenUnit },
+            });
           }
 
-          throw new Error(`unit is of type ${typeof unit}! String coercion value wouldn't be a valid CSS <length> unit.`,
-          { cause: { value: unit } });
+          throw new TypeError(
+            `lenUnit is of type ${typeof lenUnit}! String coercion value wouldn't be a valid CSS <length> unit.`,
+            { cause: { value: lenUnit } }
+          );
         }
 
-        this.#lenUnit = `${unit ?? ''}`;
+        this.#lenUnit = `${lenUnit ?? ''}`;
 
         if (this.#lenUnit.startsWith('[object ')) {
           this.#lenUnit = '';
@@ -132,28 +132,23 @@ class Note {
   }
 
   /**
-   * @param {'string'} [hint]
    */
-  [Symbol.toPrimitive](hint) {
-    if (hint === 'string') {
-      return `${this.#value}${this.#lenUnit}`;
-    }
-
-    return this.#value;
+  toString() {
+    return `${this.#value}${this.#lenUnit}`;
   }
 
   /**
-   */ // eslint-disable-next-line class-methods-use-this
-  get [Symbol.toStringTag]() {
-    return /** @type {const} */ ('Note');
+   */
+  valueOf() {
+    return this.#value;
   }
 }
-/* eslint-enable function-paren-newline, indent, no-use-before-define */
+/* eslint-enable comma-dangle, no-use-before-define */
 /**
  * @param {?} value
  */
 function isObject(value) {
-  return !!value && typeof value === 'object';
+  return typeof value === 'object' && value !== null;
 }
 
 /**
