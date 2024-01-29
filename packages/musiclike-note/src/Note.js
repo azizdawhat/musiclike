@@ -1,4 +1,5 @@
-/* eslint-disable comma-dangle, consistent-return, no-use-before-define */
+import bind from './Note.bind.js';
+
 class Note {
   /**
    * @memberof Note
@@ -8,10 +9,17 @@ class Note {
   static get LenUNITS() {
     return Object.freeze(
       /** @type {const} */ ([
-        '%',
-        'Q',
         'cap',
         'ch',
+        'ex',
+        'ic',
+        'rcap',
+        'rch',
+        'rex',
+        'ric',
+        // ,
+        '%',
+        'Q',
         'cm',
         'cqb',
         'cqh',
@@ -26,8 +34,6 @@ class Note {
         'dvmin',
         'dvw',
         'em',
-        'ex',
-        'ic',
         'in',
         'lh',
         'lvb',
@@ -40,11 +46,7 @@ class Note {
         'pc',
         'pt',
         'px',
-        'rcap',
-        'rch',
         'rem',
-        'rex',
-        'ric',
         'rlh',
         'svb',
         'svh',
@@ -58,13 +60,22 @@ class Note {
         'vmax',
         'vmin',
         'vw',
+        // eslint-disable-next-line comma-dangle
       ])
     );
   }
 
   /**
-   * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
+   * @param {?} value
    */
+  @bind
+  static isNote(value) {
+    return value instanceof this;
+  }
+
+  /**
+   * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
+   */ // eslint-disable-next-line consistent-return
   static parseLenUnit(length) {
     const value = Number.parseFloat(length);
 
@@ -97,16 +108,14 @@ class Note {
       if (/\D+$/.test(length)) {
         this.#lenUnit = /** @type {typeof Note} */ (this.constructor).parseLenUnit(length);
       } else {
-        if (!isString(lenUnit) && typeof lenUnit !== 'object') {
-          throw new TypeError(
-            `Cannot convert a ${capitalize(typeof lenUnit)} value to a valid CSS <length> unit`,
-            { cause: { value: lenUnit } }
-          );
+        // eslint-disable-next-line no-use-before-define
+        const str = isSymbol(lenUnit) ? /** @type {symbol} */ (lenUnit).toString() : `${lenUnit}`;
+        // eslint-disable-next-line no-use-before-define
+        if (!isObject(lenUnit) && !isString(lenUnit)) {
+          throw new TypeError(`Cannot convert ${str} to a valid CSS <length> unit`);
         }
 
-        const str = `${lenUnit}`;
-
-        if (!str.startsWith('[object ') && str !== 'null') {
+        if (!str.startsWith('[object ')) {
           this.#lenUnit = str;
         }
       }
@@ -116,7 +125,7 @@ class Note {
   /**
    */
   toString() {
-    return `${this.#value}${this.#lenUnit}`;
+    return this.#value + this.#lenUnit;
   }
 
   /**
@@ -125,12 +134,12 @@ class Note {
     return this.#value;
   }
 }
-/* eslint-enable comma-dangle, consistent-return, no-use-before-define */
+
 /**
- * @param {string} str
+ * @param {?} value
  */
-function capitalize(str) {
-  return str[0].toUpperCase() + str.slice(1);
+function isObject(value) {
+  return typeof value === 'object' && value !== null;
 }
 
 /**
@@ -140,4 +149,11 @@ function isString(value) {
   return typeof (value ?? {}).valueOf() === 'string';
 }
 
-export { Note as default, isString };
+/**
+ * @param {?} value
+ */
+function isSymbol(value) {
+  return typeof value === 'symbol';
+}
+// eslint-disable-next-line object-curly-newline
+export { Note as default, isObject, isString, isSymbol };
