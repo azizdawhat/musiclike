@@ -1,4 +1,20 @@
 {
+  "overrides": [
+    {
+      "plugins": [
+        [
+          "@babel/plugin-proposal-decorators",
+          {
+            "version": "2023-05"
+          }
+        ]
+      ],
+      "test": [
+        "./packages/musiclike-note"
+        // ,
+      ]
+    }
+  ],
   "plugins": [
     [
       "@babel/plugin-transform-runtime",
@@ -6,7 +22,7 @@
         "corejs": {
           "version": 3
         },
-        "version": "^7.23.7"
+        "version": "^7.23.9"
       }
     ]
   ],

@@ -1,13 +1,19 @@
 {
   "author": "Aziz Da <azizdawhat@gmail.com>",
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.23.7"
+    "@babel/runtime-corejs3": "^7.23.9"
   },
   "description": "Note wraps and parses a CSS <length> to use it as a number.",
   "exports": {
-    "types": "./dist/Note.d.ts",
-    "import": "./dist/Note.js",
-    "require": "./dist/Note.cjs"
+    ".": {
+      "types": "./dist/Note.d.ts",
+      "import": "./dist/Note.js",
+      "require": "./dist/Note.cjs"
+    },
+    "./bind": {
+      "types": "./dist/Note.bind.d.ts",
+      "import": "./dist/Note.bind.js"
+    }
   },
   "license": "GPL-3.0-or-later",
   "main": "./dist/Note.cjs",
