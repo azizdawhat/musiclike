@@ -2,6 +2,8 @@ import { babel } from '@rollup/plugin-babel';
 
 import esLint from '@rollup/plugin-eslint';
 
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+
 import terser from '@rollup/plugin-terser';
 
 import { dirname as dirName } from 'node:path';
@@ -13,6 +15,7 @@ import * as rollup from 'rollup';
 /** @type {rollup.ExternalOption} */
 const external = [
   new RegExp('@babel/runtime-corejs3'),
+  new RegExp('gebrauchsmusik'),
   // ,
 ];
 /** @type {rollup.OutputOptions} */
@@ -23,6 +26,9 @@ const output = {
 /** @type {rollup.InputPluginOption} */
 const plugins = [
   esLint({
+    // ,
+  }),
+  nodeResolve({
     // ,
   }),
   babel({
@@ -58,7 +64,7 @@ const options = [
       {
         dir: './dist',
         entryFileNames: '[name].cjs',
-        exports: 'named',
+        exports: 'auto',
         format: 'commonjs',
       },
     ],

@@ -15,6 +15,7 @@
     "@babel/register": "^7.23.7",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-eslint": "^9.0.5",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^20.11.10",

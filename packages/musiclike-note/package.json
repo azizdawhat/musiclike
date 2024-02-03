@@ -1,7 +1,8 @@
 {
   "author": "Aziz Da <azizdawhat@gmail.com>",
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.23.9"
+    "@babel/runtime-corejs3": "^7.23.9",
+    "gebrauchsmusik": "^0.1.0"
   },
   "description": "Note wraps and parses a CSS <length> to use it as a number.",
   "exports": {
