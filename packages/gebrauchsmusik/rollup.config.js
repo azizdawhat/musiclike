@@ -17,9 +17,9 @@ import { fileURLToPath } from 'node:url';
 async function filterDir(dir, callbackFn) {
   const files = [];
 
-  for (const [index, dirEnt] of (await readDir(dir, { withFileTypes: true })).entries()) {
+  for (const dirEnt of await readDir(dir, { withFileTypes: true })) {
     if (callbackFn(dirEnt)) {
-      files[index] = formatPath({ dir, base: dirEnt.name });
+      files[files.length] = formatPath({ dir, base: dirEnt.name });
     }
   }
 
@@ -33,8 +33,8 @@ const options = [
       new RegExp('@babel/runtime-corejs3'),
       // ,
     ],
-    input: await filterDir('./src', function callbackFn() {
-      return true;
+    input: await filterDir('./src', function callbackFn({ name }) {
+      return !name.startsWith('_');
     }),
     output: [
       {
