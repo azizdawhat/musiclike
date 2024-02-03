@@ -62,6 +62,7 @@ class Note {
         'vmax',
         'vmin',
         'vw',
+        // eslint-disable-next-line comma-dangle
       ])
     );
   }
@@ -77,7 +78,7 @@ class Note {
 
   /**
    * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
-   */
+   */ // eslint-disable-next-line consistent-return
   static parseLenUnit(length) {
     const value = Number.parseFloat(length);
 
