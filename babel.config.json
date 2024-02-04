@@ -10,7 +10,8 @@
         ]
       ],
       "test": [
-        "./packages/musiclike-note"
+        "./packages/musiclike-note",
+        "./packages/musiclike-pitch"
         // ,
       ]
     }

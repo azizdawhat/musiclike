@@ -1,0 +1,32 @@
+{
+  "author": "Aziz Da <azizdawhat@gmail.com>",
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.23.9",
+    "@musiclike/note": "^0.1.0",
+    "gebrauchsmusik": "^0.1.0"
+  },
+  "exports": {
+    "types": "./dist/Pitch.d.ts",
+    "import": "./dist/Pitch.js",
+    "require": "./dist/Pitch.cjs"
+  },
+  "license": "GPL-3.0-or-later",
+  "main": "./dist/Pitch.cjs",
+  "name": "@musiclike/pitch",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "directory": "./packages/musiclike-pitch",
+    "type": "git",
+    "url": "https://github.com/azizdawhat/musiclike.git"
+  },
+  "scripts": {
+    "build": "concurrently --raw \"rollup --config \\\"./rollup.config.js\\\"\" \"tsc --project \\\"./tsconfig.json\\\"\"",
+    "prebuild": "del --verbose \"./dist/*\"",
+    "test": "mocha --config \"./.mocharc.jsonc\""
+  },
+  "type": "module",
+  "types": "./dist/Pitch.d.ts",
+  "version": "0.1.0"
+}
