@@ -1,7 +1,7 @@
 import { isObject, isString, toString } from 'gebrauchsmusik';
 
 import bind from './Note.bind.js';
-
+/* eslint-disable consistent-return */
 class Note {
   /**
    * @memberof Note
@@ -68,6 +68,19 @@ class Note {
   }
 
   /**
+   * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
+   */
+  static isLenUnitOptional(length) {
+    const value = Number.parseFloat(length);
+
+    if (value) {
+      return !Number.isFinite(value);
+    }
+
+    return true;
+  }
+
+  /**
    * @param {?} value
    * @returns {value is Note}
    */
@@ -78,11 +91,10 @@ class Note {
 
   /**
    * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
-   */ // eslint-disable-next-line consistent-return
+   */
+  @bind
   static parseLenUnit(length) {
-    const value = Number.parseFloat(length);
-
-    if (Number.isFinite(value) && value) {
+    if (!this.isLenUnitOptional(length)) {
       /** @type {(typeof Note)['LenUNITS'][number][]} */
       const [lenUnit] = `${length}`.match(/\D+$/) || [];
 
@@ -107,9 +119,11 @@ class Note {
   constructor(length, lenUnit = '') {
     this.#value = Number.parseFloat(length);
 
-    if (Number.isFinite(this.#value) && this.#value) {
+    const { isLenUnitOptional, parseLenUnit } = /** @type {typeof Note} */ (this.constructor);
+
+    if (!isLenUnitOptional(length)) {
       if (/\D+$/.test(length)) {
-        this.#lenUnit = /** @type {typeof Note} */ (this.constructor).parseLenUnit(length);
+        this.#lenUnit = parseLenUnit(length);
       } else {
         const str = toString(lenUnit);
 
@@ -136,5 +150,5 @@ class Note {
     return this.#value;
   }
 }
-
+/* eslint-enable consistent-return */
 export { Note as default };
