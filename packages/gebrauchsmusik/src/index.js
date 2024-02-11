@@ -1,3 +1,5 @@
+export { default as isBigInt } from './isBigInt.js';
+
 export { default as isNumber } from './isNumber.js';
 
 export { default as isObject } from './isObject.js';
