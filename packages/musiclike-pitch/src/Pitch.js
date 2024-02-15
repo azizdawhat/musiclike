@@ -1,8 +1,8 @@
 import Note from '@musiclike/note';
 // eslint-disable-next-line import/no-unresolved
 import bind from '@musiclike/note/bind';
-/* eslint-disable object-curly-newline */
-import { isNumber, isString, isUndefined, toString } from 'gebrauchsmusik';
+/* eslint-disable max-len, object-curly-newline */
+import { castArray, clamp, isNumber, isString, isUndefined, toString } from 'gebrauchsmusik';
 
 class Pitch {
   /**
@@ -57,9 +57,7 @@ class Pitch {
    * @param {Partial<ReturnType<Pitch['valueOf']>>|Pitch} [obj]
    */
   constructor(obj = {}) {
-    const { fontSize, height, lineHeight, width, writingMode } = /** @type {typeof Pitch} */ (
-      this.constructor
-    ).isPitch(obj)
+    const { fontSize, height, width, writingMode } = /** @type {typeof Pitch} */ (this.constructor).isPitch(obj)
       ? obj.valueOf()
       : obj;
 
@@ -69,10 +67,6 @@ class Pitch {
 
     if (!isUndefined(height)) {
       this.height = height;
-    }
-
-    if (!isUndefined(lineHeight)) {
-      this.lineHeight = lineHeight;
     }
 
     if (!isUndefined(width)) {
@@ -93,23 +87,36 @@ class Pitch {
 
   /**
    * @memberof Pitch
+   * @see {@link https://m2.material.io/design/typography/understanding-typography.html#type-properties}
    */
   set fontSize(value) {
-    if (!Note.isNote(value) && !isNumber(value)) {
-      throw new TypeError(`${toString(value)} is neither a Note instance nor a number`);
-    }
+    const values = castArray(value);
+    // eslint-disable-next-line no-shadow
+    for (const [index, value, key = ['fontSize', 'lineHeight'][index]] of values.entries()) {
+      if (!key) {
+        break;
+      }
 
-    if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
-      throw new RangeError('Invalid Pitch.prototype.fontSize <length> value');
-    }
+      if (!Note.isNote(value) && !isNumber(value)) {
+        throw new TypeError(`Pitch.prototype.${key} ${toString(value)} is neither a Note instance nor a number`);
+      }
 
-    if (+value) {
-      if (Note.isNote(value) && Note.parseLenUnit(value) !== 'px') {
-        throw new Error('Invalid Pitch.prototype.fontSize <length> unit');
+      if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
+        throw new RangeError(`Invalid Pitch.prototype.${key} <length>`);
+      }
+
+      if (+value) {
+        if (Note.isNote(value) && Note.parseLenUnit(value) !== 'px') {
+          throw new Error(`Invalid Pitch.prototype.${key} <length>`);
+        }
       }
     }
 
-    this.#fontSize = new Note(Math.round(value), 'px');
+    const [fontSize, lineHeight = fontSize * (3 / 2)] = values;
+
+    this.#fontSize = new Note(Math.round(clamp(fontSize, (Number.MAX_SAFE_INTEGER - 3) / 2, 4)), 'px');
+    // prettier-ignore
+    this.#lineHeight = new Note(Math.ceil(clamp(lineHeight, this.#fontSize * 2, this.#fontSize * (6 / 5)) / 4) * 4, 'px');
   }
 
   /**
@@ -124,16 +131,16 @@ class Pitch {
    */
   set height(value) {
     if (!Note.isNote(value) && !isNumber(value)) {
-      throw new TypeError(`${toString(value)} is neither a Note instance nor a number`);
+      throw new TypeError(`Pitch.prototype.height ${toString(value)} is neither a Note instance nor a number`);
     }
 
     if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
-      throw new RangeError('Invalid Pitch.prototype.height <length> value');
+      throw new RangeError('Invalid Pitch.prototype.height <length>');
     }
 
     if (+value) {
       if (Note.isNote(value) && Note.parseLenUnit(value) !== 'px') {
-        throw new Error('Invalid Pitch.prototype.height <length> unit');
+        throw new Error('Invalid Pitch.prototype.height <length>');
       }
     }
 
@@ -142,30 +149,10 @@ class Pitch {
 
   /**
    * @memberof Pitch
+   * @readonly
    */
   get lineHeight() {
     return this.#lineHeight;
-  }
-
-  /**
-   * @memberof Pitch
-   */
-  set lineHeight(value) {
-    if (!Note.isNote(value) && !isNumber(value)) {
-      throw new TypeError(`${toString(value)} is neither a Note instance nor a number`);
-    }
-
-    if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
-      throw new RangeError('Invalid Pitch.prototype.lineHeight <length> value');
-    }
-
-    if (+value) {
-      if (Note.isNote(value) && Note.parseLenUnit(value) !== 'px') {
-        throw new Error('Invalid Pitch.prototype.lineHeight <length> unit');
-      }
-    }
-
-    this.#lineHeight = new Note(Math.round(value), 'px');
   }
 
   /**
@@ -173,13 +160,14 @@ class Pitch {
    * @returns {Note}
    */
   parseLen(length) {
+    // prettier-ignore
+    const { LenUNITS: [, , , , , , , , ...LenUNITS], isLenUnitOptional, parseLenUnit } = Note;
+
     const value = Number.parseFloat(length);
 
-    if (!Number.isFinite(value) || !value) {
+    if (isLenUnitOptional(length)) {
       return new Note(value);
     }
-    // prettier-ignore
-    const { LenUNITS: [, , , , , , , , ...LenUNITS], parseLenUnit } = Note;
 
     const lenUnit = parseLenUnit(length) || 'em';
 
@@ -378,13 +366,12 @@ class Pitch {
    */
   valueOf() {
     const { fontSize, height, lineHeight, width, writingMode } = this;
-    /* eslint-enable object-curly-newline */
+    /* eslint-enable max-len, object-curly-newline */
     return {
-      fontSize,
       height,
-      lineHeight,
       width,
       writingMode,
+      fontSize: [fontSize, lineHeight],
     };
   }
 
@@ -400,16 +387,16 @@ class Pitch {
    */
   set width(value) {
     if (!Note.isNote(value) && !isNumber(value)) {
-      throw new TypeError(`${toString(value)} is neither a Note instance nor a number`);
+      throw new TypeError(`Pitch.prototype.width ${toString(value)} is neither a Note instance nor a number`);
     }
 
     if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
-      throw new RangeError('Invalid Pitch.prototype.width <length> value');
+      throw new RangeError('Invalid Pitch.prototype.width <length>');
     }
 
     if (+value) {
       if (Note.isNote(value) && Note.parseLenUnit(value) !== 'px') {
-        throw new Error('Invalid Pitch.prototype.width <length> unit');
+        throw new Error('Invalid Pitch.prototype.width <length>');
       }
     }
 
@@ -428,7 +415,7 @@ class Pitch {
    */
   set writingMode(value) {
     if (!isString(value)) {
-      throw new TypeError(`${toString(value)} is not a string`);
+      throw new TypeError(`Pitch.prototype.writingMode ${toString(value)} is not a string`);
     }
 
     this.#writingMode = value;

@@ -7,6 +7,22 @@
     "airbnb-base"
     // ,
   ],
+  "overrides": [
+    {
+      "files": [
+        "./packages/musiclike-pitch/src/*.js"
+        // ,
+      ],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          "LabeledStatement",
+          "WithStatement"
+          // ,
+        ]
+      }
+    }
+  ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "babelOptions": {
