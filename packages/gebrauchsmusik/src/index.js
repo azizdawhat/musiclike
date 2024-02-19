@@ -1,8 +1,4 @@
-export { default as castArray } from './castArray.js';
-
 export { default as clamp } from './clamp.js';
-
-export { default as isNumber } from './isNumber.js';
 
 export { default as isObject } from './isObject.js';
 
