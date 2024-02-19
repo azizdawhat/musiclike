@@ -1,8 +1,8 @@
 import Note from '@musiclike/note';
 // eslint-disable-next-line import/no-unresolved
 import bind from '@musiclike/note/bind';
-/* eslint-disable max-len, object-curly-newline */
-import { castArray, clamp, isNumber, isString, isUndefined, toString } from 'gebrauchsmusik';
+
+import { clamp, isUndefined } from 'gebrauchsmusik';
 
 class Pitch {
   /**
@@ -57,6 +57,7 @@ class Pitch {
    * @param {Partial<ReturnType<Pitch['valueOf']>>|Pitch} [obj]
    */
   constructor(obj = {}) {
+    // eslint-disable-next-line max-len, object-curly-newline
     const { fontSize, height, width, writingMode } = /** @type {typeof Pitch} */ (this.constructor).isPitch(obj)
       ? obj.valueOf()
       : obj;
@@ -90,15 +91,11 @@ class Pitch {
    * @see {@link https://m2.material.io/design/typography/understanding-typography.html#type-properties}
    */
   set fontSize(value) {
-    const values = castArray(value);
+    const values = /** @type {value[]} */ (Array.prototype).concat(value);
     // eslint-disable-next-line no-shadow
     for (const [index, value, key = ['fontSize', 'lineHeight'][index]] of values.entries()) {
       if (!key) {
         break;
-      }
-
-      if (!Note.isNote(value) && !isNumber(value)) {
-        throw new TypeError(`Pitch.prototype.${key} ${toString(value)} is neither a Note instance nor a number`);
       }
 
       if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
@@ -130,10 +127,6 @@ class Pitch {
    * @memberof Pitch
    */
   set height(value) {
-    if (!Note.isNote(value) && !isNumber(value)) {
-      throw new TypeError(`Pitch.prototype.height ${toString(value)} is neither a Note instance nor a number`);
-    }
-
     if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
       throw new RangeError('Invalid Pitch.prototype.height <length>');
     }
@@ -174,7 +167,7 @@ class Pitch {
     if (!LenUNITS.includes(lenUnit)) {
       return new Note();
     }
-
+    // eslint-disable-next-line object-curly-newline
     const { constructor, fontSize, height, lineHeight, width, writingMode } = this;
     // prettier-ignore
     const { WRITING_MODES: [, ...WRITING_MODES] } = /** @type {typeof Pitch} */ (constructor);
@@ -365,8 +358,9 @@ class Pitch {
   /**
    */
   valueOf() {
+    // eslint-disable-next-line object-curly-newline
     const { fontSize, height, lineHeight, width, writingMode } = this;
-    /* eslint-enable max-len, object-curly-newline */
+
     return {
       height,
       width,
@@ -386,10 +380,6 @@ class Pitch {
    * @memberof Pitch
    */
   set width(value) {
-    if (!Note.isNote(value) && !isNumber(value)) {
-      throw new TypeError(`Pitch.prototype.width ${toString(value)} is neither a Note instance nor a number`);
-    }
-
     if (value < 0 || value > Number.MAX_SAFE_INTEGER) {
       throw new RangeError('Invalid Pitch.prototype.width <length>');
     }
@@ -414,11 +404,7 @@ class Pitch {
    * @memberof Pitch
    */
   set writingMode(value) {
-    if (!isString(value)) {
-      throw new TypeError(`Pitch.prototype.writingMode ${toString(value)} is not a string`);
-    }
-
-    this.#writingMode = value;
+    this.#writingMode = `${value}`;
   }
 }
 
