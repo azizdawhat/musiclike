@@ -1,4 +1,4 @@
-import isSymbol from './_isSymbol.js';
+import isSymbol from './isSymbol.js';
 
 /**
  * @param {?} value
