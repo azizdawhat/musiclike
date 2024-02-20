@@ -1,5 +1,4 @@
-// eslint-disable-next-line object-curly-newline
-import { isObject, isString, isSymbol, toString } from 'gebrauchsmusik';
+import { isObject, isString, toString } from 'gebrauchsmusik';
 
 import bind from './Note.bind.js';
 
@@ -80,13 +79,13 @@ class Note {
 
   /**
    * @param {ConstructorParameters<typeof Note>[0]} length
-   * @returns {(typeof Note)['LenUNITS'][number]|symbol}
+   * @returns {?(typeof Note)['LenUNITS'][number]}
    */
   static parseLenUnit(length) {
     const value = Number.parseFloat(length);
 
     if (Number.isNaN(value)) {
-      return Symbol.for('Note.NaN');
+      return null;
     }
 
     if (!Number.isFinite(value) || !value) {
@@ -97,45 +96,32 @@ class Note {
   }
 
   /**
-   * @type {(typeof Note)['LenUNITS'][number]|symbol}
    */
-  #lenUnit = Symbol('NaN');
+  #value = `${Number.NaN}`;
 
   /**
+   * @param {Note|number|string} length
+   * @param {?(typeof Note)['LenUNITS'][number]} [lenUnit]
    */
-  #value = Number.NaN;
-
-  /**
-   * @param {Note|number|string} [length]
-   * @param {(typeof Note)['LenUNITS'][number]|symbol} [lenUnit]
-   */
-  constructor(length, lenUnit = Symbol('NaN')) {
+  constructor(length, lenUnit = null) {
     const value = Number.parseFloat(length);
 
     if (!Number.isNaN(value)) {
-      const { isNote, parseLenUnit } = /** @type {typeof Note} */ (this.constructor);
-
-      if (isNote(length) || isString(length)) {
-        this.#lenUnit = parseLenUnit(length);
-
-        this.#value = value;
+      if (!Number.isFinite(value) || !value) {
+        this.#value = `${value}`;
       } else {
         // eslint-disable-next-line no-lonely-if
-        if (!Number.isFinite(value) || !value) {
-          this.#lenUnit = '';
-
-          this.#value = value;
+        if (isString(length) || /** @type {typeof Note} */ (this.constructor).isNote(length)) {
+          this.#value = `${length}`;
         } else {
           const str = toString(lenUnit);
 
-          if (!isObject(lenUnit) && !isString(lenUnit) && !isSymbol(lenUnit)) {
+          if (!isObject(lenUnit) && !isString(lenUnit)) {
             throw new TypeError(`Cannot convert ${str} to a valid CSS <length> unit`);
           }
 
-          if (!str.startsWith('Symbol(') && !str.startsWith('[object ') && str !== 'null') {
-            this.#lenUnit = str;
-
-            this.#value = value;
+          if (!str.startsWith('[object ') && str !== 'null') {
+            this.#value = `${value}${str}`;
           }
         }
       }
@@ -145,17 +131,13 @@ class Note {
   /**
    */
   toString() {
-    if (isSymbol(this.#lenUnit)) {
-      return `${this.#value}`;
-    }
-
-    return `${this.#value}${this.#lenUnit}`;
+    return this.#value;
   }
 
   /**
    */
   valueOf() {
-    return +this.#value;
+    return Number.parseFloat(this);
   }
 }
 
