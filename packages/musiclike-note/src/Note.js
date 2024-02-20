@@ -1,7 +1,8 @@
-import { isObject, isString, toString } from 'gebrauchsmusik';
+// eslint-disable-next-line object-curly-newline
+import { isObject, isString, isSymbol, toString } from 'gebrauchsmusik';
 
 import bind from './Note.bind.js';
-/* eslint-disable consistent-return */
+
 class Note {
   /**
    * @memberof Note
@@ -21,6 +22,7 @@ class Note {
         'ric',
         // ,
         '%',
+        '',
         'Q',
         'cm',
         'cqb',
@@ -68,19 +70,6 @@ class Note {
   }
 
   /**
-   * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
-   */
-  static isLenUnitOptional(length) {
-    const value = Number.parseFloat(length);
-
-    if (value) {
-      return !Number.isFinite(value);
-    }
-
-    return true;
-  }
-
-  /**
    * @param {?} value
    * @returns {value is Note}
    */
@@ -90,23 +79,27 @@ class Note {
   }
 
   /**
-   * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
+   * @param {ConstructorParameters<typeof Note>[0]} length
+   * @returns {(typeof Note)['LenUNITS'][number]|symbol}
    */
-  @bind
   static parseLenUnit(length) {
-    if (!this.isLenUnitOptional(length)) {
-      /** @type {(typeof Note)['LenUNITS'][number][]} */
-      const [lenUnit] = `${length}`.match(/\D+$/) || [];
+    const value = Number.parseFloat(length);
 
-      if (lenUnit) {
-        return lenUnit;
-      }
+    if (Number.isNaN(value)) {
+      return Symbol.for('Note.NaN');
     }
+
+    if (!Number.isFinite(value) || !value) {
+      return '';
+    }
+
+    return /\D+$/.exec(length)?.[0] || '';
   }
 
   /**
+   * @type {(typeof Note)['LenUNITS'][number]|symbol}
    */
-  #lenUnit = '';
+  #lenUnit = Symbol('NaN');
 
   /**
    */
@@ -114,25 +107,36 @@ class Note {
 
   /**
    * @param {Note|number|string} [length]
-   * @param {(typeof Note)['LenUNITS'][number]} [lenUnit]
+   * @param {(typeof Note)['LenUNITS'][number]|symbol} [lenUnit]
    */
-  constructor(length, lenUnit = '') {
-    this.#value = Number.parseFloat(length);
+  constructor(length, lenUnit = Symbol('NaN')) {
+    const value = Number.parseFloat(length);
 
-    const { isLenUnitOptional, parseLenUnit } = /** @type {typeof Note} */ (this.constructor);
+    if (!Number.isNaN(value)) {
+      const { isNote, parseLenUnit } = /** @type {typeof Note} */ (this.constructor);
 
-    if (!isLenUnitOptional(length)) {
-      if (/\D+$/.test(length)) {
+      if (isNote(length) || isString(length)) {
         this.#lenUnit = parseLenUnit(length);
+
+        this.#value = value;
       } else {
-        const str = toString(lenUnit);
+        // eslint-disable-next-line no-lonely-if
+        if (!Number.isFinite(value) || !value) {
+          this.#lenUnit = '';
 
-        if (!isObject(lenUnit) && !isString(lenUnit)) {
-          throw new TypeError(`Cannot convert ${str} to a valid CSS <length> unit`);
-        }
+          this.#value = value;
+        } else {
+          const str = toString(lenUnit);
 
-        if (!str.startsWith('[object ') && str !== 'null') {
-          this.#lenUnit = str;
+          if (!isObject(lenUnit) && !isString(lenUnit) && !isSymbol(lenUnit)) {
+            throw new TypeError(`Cannot convert ${str} to a valid CSS <length> unit`);
+          }
+
+          if (!str.startsWith('Symbol(') && !str.startsWith('[object ') && str !== 'null') {
+            this.#lenUnit = str;
+
+            this.#value = value;
+          }
         }
       }
     }
@@ -141,14 +145,18 @@ class Note {
   /**
    */
   toString() {
-    return this.#value + this.#lenUnit;
+    if (isSymbol(this.#lenUnit)) {
+      return `${this.#value}`;
+    }
+
+    return `${this.#value}${this.#lenUnit}`;
   }
 
   /**
    */
   valueOf() {
-    return this.#value;
+    return +this.#value;
   }
 }
-/* eslint-enable consistent-return */
+
 export { Note as default };
