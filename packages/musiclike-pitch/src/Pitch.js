@@ -91,7 +91,7 @@ class Pitch {
    * @see {@link https://m2.material.io/design/typography/understanding-typography.html#type-properties}
    */
   set fontSize(value) {
-    const values = /** @type {value[]} */ (Array.prototype).concat(value);
+    const values = /** @type {value[]} */ ([]).concat(value);
     // eslint-disable-next-line no-shadow
     for (const [index, value, key = ['fontSize', 'lineHeight'][index]] of values.entries()) {
       if (!key) {
@@ -149,18 +149,17 @@ class Pitch {
   }
 
   /**
-   * @param {NonNullable<ConstructorParameters<typeof Note>[0]>} length
+   * @param {ConstructorParameters<typeof Note>[0]} length
    * @returns {Note}
    */
   parseLen(length) {
-    // prettier-ignore
-    const { LenUNITS: [, , , , , , , , ...LenUNITS], isLenUnitOptional, parseLenUnit } = Note;
-
     const value = Number.parseFloat(length);
 
-    if (isLenUnitOptional(length)) {
+    if (!Number.isFinite(value) || !value) {
       return new Note(value);
     }
+    // prettier-ignore
+    const { LenUNITS: [, , , , , , , , ...LenUNITS], parseLenUnit } = Note;
 
     const lenUnit = parseLenUnit(length) || 'em';
 
