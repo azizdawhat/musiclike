@@ -6,24 +6,24 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 import terser from '@rollup/plugin-terser';
 
-import { dirname as dirName } from 'node:path';
-
-import { fileURLToPath } from 'node:url';
-
 import * as rollup from 'rollup';
 
-/** @type {rollup.ExternalOption} */
+/** @type {rollup.ExternalOption[]} */
 const external = [
   new RegExp('@babel/runtime-corejs3'),
   new RegExp('gebrauchsmusik'),
   // ,
 ];
-/** @type {rollup.OutputOptions} */
-const output = {
-  dir: './dist',
-  format: 'module',
-};
-/** @type {rollup.InputPluginOption} */
+
+/** @type {rollup.OutputOptions[]} */
+const output = [
+  {
+    dir: './dist',
+    format: 'module',
+  },
+];
+
+/** @type {rollup.InputPluginOption[]} */
 const plugins = [
   esLint({
     // ,
@@ -33,7 +33,7 @@ const plugins = [
   }),
   babel({
     babelHelpers: 'runtime',
-    root: dirName(fileURLToPath(import.meta.url)),
+    root: import.meta.dirname,
     rootMode: 'upward',
   }),
   terser({
@@ -41,6 +41,7 @@ const plugins = [
     keep_fnames: true,
   }),
 ];
+
 /** @type {rollup.RollupOptions[]} */
 const options = [
   {
@@ -59,15 +60,12 @@ const options = [
       './src/Note.js',
       // ,
     ],
-    output: [
-      output,
-      {
-        dir: './dist',
-        entryFileNames: '[name].cjs',
-        exports: 'auto',
-        format: 'commonjs',
-      },
-    ],
+    output: output.concat({
+      dir: './dist',
+      entryFileNames: '[name].cjs',
+      exports: 'auto',
+      format: 'commonjs',
+    }),
   },
 ];
 

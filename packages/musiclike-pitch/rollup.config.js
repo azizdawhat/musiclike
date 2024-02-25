@@ -6,11 +6,9 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 import terser from '@rollup/plugin-terser';
 
-import { dirname as dirName } from 'node:path';
+import * as rollup from 'rollup';
 
-import { fileURLToPath } from 'node:url';
-
-/** @type {import('rollup').RollupOptions[]} */
+/** @type {rollup.RollupOptions[]} */
 const options = [
   {
     external: [
@@ -44,7 +42,7 @@ const options = [
       }),
       babel({
         babelHelpers: 'runtime',
-        root: dirName(fileURLToPath(import.meta.url)),
+        root: import.meta.dirname,
         rootMode: 'upward',
       }),
       terser({

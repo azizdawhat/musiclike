@@ -4,17 +4,16 @@ import esLint from '@rollup/plugin-eslint';
 
 import terser from '@rollup/plugin-terser';
 
+import { Dirent as DirEnt } from 'node:fs';
+
 import { readdir as readDir } from 'node:fs/promises';
 
-import { dirname as dirName, format as formatPath } from 'node:path';
+import { format as formatPath } from 'node:path';
 
-import { fileURLToPath } from 'node:url';
+import * as rollup from 'rollup';
 
-/**
- * @param {Parameters<readDir>[0]} dir
- * @param {function(import('node:fs').Dirent): boolean} callbackFn
- */
-async function filterDir(dir, callbackFn) {
+/** @param {Parameters<readDir>[0]} dir */
+async function filterDir(dir, callbackFn = stubTrue) {
   const files = [];
 
   for (const dirEnt of await readDir(dir, { withFileTypes: true })) {
@@ -26,7 +25,7 @@ async function filterDir(dir, callbackFn) {
   return files;
 }
 
-/** @type {import('rollup').RollupOptions[]} */
+/** @type {rollup.RollupOptions[]} */
 const options = [
   {
     external: [
@@ -54,7 +53,7 @@ const options = [
       }),
       babel({
         babelHelpers: 'runtime',
-        root: dirName(fileURLToPath(import.meta.url)),
+        root: import.meta.dirname,
         rootMode: 'upward',
       }),
       terser({
@@ -63,5 +62,10 @@ const options = [
     ],
   },
 ];
+
+/** @param {DirEnt} dirEnt  */
+function stubTrue(dirEnt) {
+  return !!dirEnt;
+}
 
 export { options as default };
