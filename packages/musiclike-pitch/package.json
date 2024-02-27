@@ -2,8 +2,7 @@
   "author": "Aziz Da <azizdawhat@gmail.com>",
   "dependencies": {
     "@babel/runtime-corejs3": "^7.23.9",
-    "@musiclike/note": "^0.1.0",
-    "gebrauchsmusik": "^0.1.0"
+    "@musiclike/note": "^0.1.0"
   },
   "exports": {
     "types": "./dist/Pitch.d.ts",

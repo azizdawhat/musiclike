@@ -11,7 +11,6 @@ import * as rollup from 'rollup';
 /** @type {rollup.ExternalOption[]} */
 const external = [
   new RegExp('@babel/runtime-corejs3'),
-  new RegExp('gebrauchsmusik'),
   // ,
 ];
 
