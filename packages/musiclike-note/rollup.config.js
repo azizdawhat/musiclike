@@ -45,15 +45,6 @@ const plugins = [
 const options = [
   {
     external,
-    output,
-    plugins,
-    input: [
-      './src/Note.bind.js',
-      // ,
-    ],
-  },
-  {
-    external,
     plugins,
     input: [
       './src/Note.js',
@@ -62,9 +53,18 @@ const options = [
     output: output.concat({
       dir: './dist',
       entryFileNames: '[name].cjs',
-      exports: 'auto',
+      exports: 'named',
       format: 'commonjs',
     }),
+  },
+  {
+    external,
+    output,
+    plugins,
+    input: [
+      './src/gebrauchsmusik.js',
+      // ,
+    ],
   },
 ];
 

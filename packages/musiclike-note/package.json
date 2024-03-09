@@ -10,9 +10,9 @@
       "import": "./dist/Note.js",
       "require": "./dist/Note.cjs"
     },
-    "./bind": {
-      "types": "./dist/Note.bind.d.ts",
-      "import": "./dist/Note.bind.js"
+    "./gebrauchsmusik": {
+      "types": "./dist/gebrauchsmusik.d.ts",
+      "import": "./dist/gebrauchsmusik.js"
     }
   },
   "license": "GPL-3.0-or-later",
