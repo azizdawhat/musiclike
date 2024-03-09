@@ -1,6 +1,4 @@
-import { isObject, isString, toString } from 'gebrauchsmusik';
-
-import bind from './Note.bind.js';
+import { bind, construct } from './gebrauchsmusik.js';
 
 class Note {
   /**
@@ -92,40 +90,76 @@ class Note {
       return '';
     }
 
-    return /\D+$/.exec(length)?.[0] || '';
+    return /\D+$/.exec(length)?.at(0) || '';
   }
 
   /**
+   * @memberof Note
    */
   #value = `${Number.NaN}`;
 
   /**
    * @param {Note|number|string} length
-   * @param {?(typeof Note)['LenUNITS'][number]} [lenUnit]
+   * @param {?(typeof Note)['LenUNITS'][number]} [obj]
    */
-  constructor(length, lenUnit = null) {
+  constructor(length, obj = null) {
     const value = Number.parseFloat(length);
 
-    if (!Number.isNaN(value)) {
-      if (!Number.isFinite(value) || !value) {
-        this.#value = `${value}`;
+    if (!Number.isFinite(value) || !value) {
+      this.#value = `${value}`;
+    } else {
+      // eslint-disable-next-line no-lonely-if
+      if (isString(length) || /** @type {typeof Note} */ (this.constructor).isNote(length)) {
+        this.#value = `${length}`;
       } else {
-        // eslint-disable-next-line no-lonely-if
-        if (isString(length) || /** @type {typeof Note} */ (this.constructor).isNote(length)) {
-          this.#value = `${length}`;
-        } else {
-          const str = toString(lenUnit);
+        const lenUnit = `${obj}`.trim();
+        // prettier-ignore
+        if (!isObject(obj) && !isString(obj)) {
+          throw new TypeError([
+            `Cannot convert "${lenUnit}" to a supported CSS <length> unit!`,
+            `${this.constructor.name}() constructor takes an arguments[1] of type string`,
+            'or an arguments[1] of type object and converts it to a value of type string.',
+          ].join(' '), {
+            cause: { value: obj },
+          });
+        }
 
-          if (!isObject(lenUnit) && !isString(lenUnit)) {
-            throw new TypeError(`Cannot convert ${str} to a valid CSS <length> unit`);
-          }
-
-          if (!str.startsWith('[object ') && str !== 'null') {
-            this.#value = `${value}${str}`;
+        try {
+          JSON.parse(lenUnit);
+        } catch {
+          if (lenUnit !== {}.toString.apply(obj)) {
+            this.#value = `${value}${lenUnit}`;
           }
         }
       }
     }
+  }
+
+  /**
+   * @param {number} [fractionDigits]
+   * @returns {Note}
+   */ // prettier-ignore
+  @construct
+  toExponential(fractionDigits) {
+    return `${(+this).toExponential(fractionDigits)}${/** @type {typeof Note} */ (this.constructor).parseLenUnit(this)}`;
+  }
+
+  /**
+   * @param {number} [digits]
+   * @returns {Note}
+   */
+  @construct
+  toFixed(digits) {
+    return `${(+this).toFixed(digits)}${/** @type {typeof Note} */ (this.constructor).parseLenUnit(this)}`;
+  }
+
+  /**
+   * @param {number} [precision]
+   * @returns {Note}
+   */
+  @construct
+  toPrecision(precision) {
+    return `${(+this).toPrecision(precision)}${/** @type {typeof Note} */ (this.constructor).parseLenUnit(this)}`;
   }
 
   /**
@@ -141,4 +175,20 @@ class Note {
   }
 }
 
-export { Note as default };
+/**
+ * @param {?} value
+ * @returns {value is object}
+ */
+function isObject(value) {
+  return typeof value === 'object';
+}
+
+/**
+ * @param {?} value
+ * @returns {value is string}
+ */
+function isString(value) {
+  return typeof value === 'string';
+}
+
+export { Note as default, isObject, isString };
