@@ -1,5 +1,7 @@
 import { bind, construct } from '@musiclike/programming';
 
+import { isObject, isString } from 'gebrauchsmusik';
+
 class Note {
   /**
    * @memberof Note
@@ -174,20 +176,4 @@ class Note {
   }
 }
 
-/**
- * @param {?} value
- * @returns {value is object}
- */
-function isObject(value) {
-  return typeof value === 'object';
-}
-
-/**
- * @param {?} value
- * @returns {value is string}
- */
-function isString(value) {
-  return typeof value === 'string';
-}
-
-export { Note as default, isObject, isString };
+export { Note as default };

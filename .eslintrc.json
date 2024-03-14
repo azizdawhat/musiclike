@@ -31,14 +31,6 @@
           // ,
         ]
       }
-    ],
-    "no-use-before-define": [
-      "error",
-      {
-        "classes": true,
-        "functions": false,
-        "variables": true
-      }
     ]
   }
 }

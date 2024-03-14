@@ -14,7 +14,7 @@ const options = [
     external: [
       new RegExp('@babel/runtime-corejs3'),
       new RegExp('@musiclike/programming'),
-      // ,
+      new RegExp('gebrauchsmusik'),
     ],
     input: [
       './src/Note.js',
@@ -24,7 +24,7 @@ const options = [
       {
         dir: './dist',
         entryFileNames: '[name].cjs',
-        exports: 'named',
+        exports: 'auto',
         format: 'commonjs',
       },
       {

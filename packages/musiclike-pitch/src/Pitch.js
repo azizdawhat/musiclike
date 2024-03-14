@@ -1,5 +1,7 @@
 import Note from '@musiclike/note';
 
+import { isUndefined } from 'gebrauchsmusik';
+
 class Pitch {
   /**
    * @memberof Pitch
@@ -174,14 +176,6 @@ class Pitch {
 
     this.#width = new Note(+value, 'px').toFixed();
   }
-}
-
-/**
- * @param {?} value
- * @returns {value is undefined}
- */
-function isUndefined(value) {
-  return typeof value === 'undefined';
 }
 
 export { Pitch as default };

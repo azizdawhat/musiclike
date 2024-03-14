@@ -14,6 +14,7 @@ const options = [
     external: [
       new RegExp('@babel/runtime-corejs3'),
       new RegExp('@musiclike/note'),
+      new RegExp('gebrauchsmusik'),
       // ,
     ],
     input: [
