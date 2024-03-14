@@ -64,7 +64,6 @@ const plugins = [
     rootMode: 'upward',
   }),
   terser({
-    keep_classnames: true,
     keep_fnames: true,
   }),
 ];
