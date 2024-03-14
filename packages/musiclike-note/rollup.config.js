@@ -8,62 +8,46 @@ import terser from '@rollup/plugin-terser';
 
 import * as rollup from 'rollup';
 
-/** @type {rollup.ExternalOption[]} */
-const external = [
-  new RegExp('@babel/runtime-corejs3'),
-  // ,
-];
-
-/** @type {rollup.OutputOptions[]} */
-const output = [
-  {
-    dir: './dist',
-    format: 'module',
-  },
-];
-
-/** @type {rollup.InputPluginOption[]} */
-const plugins = [
-  esLint({
-    // ,
-  }),
-  nodeResolve({
-    // ,
-  }),
-  babel({
-    babelHelpers: 'runtime',
-    root: import.meta.dirname,
-    rootMode: 'upward',
-  }),
-  terser({
-    keep_classnames: true,
-    keep_fnames: true,
-  }),
-];
-
 /** @type {rollup.RollupOptions[]} */
 const options = [
   {
-    external,
-    plugins,
+    external: [
+      new RegExp('@babel/runtime-corejs3'),
+      new RegExp('@musiclike/programming'),
+      // ,
+    ],
     input: [
       './src/Note.js',
       // ,
     ],
-    output: output.concat({
-      dir: './dist',
-      entryFileNames: '[name].cjs',
-      exports: 'named',
-      format: 'commonjs',
-    }),
-  },
-  {
-    external,
-    output,
-    plugins,
-    input: [
-      './src/gebrauchsmusik.js',
-      // ,
+    output: [
+      {
+        dir: './dist',
+        entryFileNames: '[name].cjs',
+        exports: 'named',
+        format: 'commonjs',
+      },
+      {
+        dir: './dist',
+        format: 'module',
+      },
+    ],
+    plugins: [
+      esLint({
+        // ,
+      }),
+      nodeResolve({
+        // ,
+      }),
+      babel({
+        babelHelpers: 'runtime',
+        root: import.meta.dirname,
+        rootMode: 'upward',
+      }),
+      terser({
+        keep_classnames: true,
+        keep_fnames: true,
+      }),
     ],
   },
 ];

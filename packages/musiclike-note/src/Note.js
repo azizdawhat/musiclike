@@ -1,4 +1,4 @@
-import { bind, construct } from './gebrauchsmusik.js';
+import { bind, construct } from '@musiclike/programming';
 
 class Note {
   /**
@@ -90,7 +90,7 @@ class Note {
       return '';
     }
 
-    return /\D+$/.exec(length)?.at(0) || '';
+    return /\D+$/.exec(length)?.[0] || '';
   }
 
   /**
@@ -100,9 +100,8 @@ class Note {
 
   /**
    * @param {Note|number|string} length
-   * @param {?(typeof Note)['LenUNITS'][number]} [obj]
    */
-  constructor(length, obj = null) {
+  constructor(length, obj = /** @type {typeof Note} */ (this.constructor).parseLenUnit(length)) {
     const value = Number.parseFloat(length);
 
     if (!Number.isFinite(value) || !value) {
