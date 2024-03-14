@@ -1,7 +1,7 @@
 {
   "author": "Aziz Da <azizdawhat@gmail.com>",
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.23.9",
+    "@babel/runtime-corejs3": "^7.24.0",
     "@musiclike/note": "^0.1.0"
   },
   "exports": {
@@ -22,8 +22,7 @@
   },
   "scripts": {
     "build": "concurrently --raw \"rollup --config \\\"./rollup.config.js\\\"\" \"tsc --project \\\"./tsconfig.json\\\"\"",
-    "prebuild": "del --verbose \"./dist/*\"",
-    "test": "mocha --config \"./.mocharc.jsonc\""
+    "prebuild": "del --verbose \"./dist/*\""
   },
   "type": "module",
   "types": "./dist/Pitch.d.ts",

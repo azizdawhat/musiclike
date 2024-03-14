@@ -10,8 +10,7 @@
         ]
       ],
       "test": [
-        "./packages/musiclike-note",
-        "./packages/musiclike-pitch"
+        "./packages/musiclike-note"
         // ,
       ]
     }
@@ -23,7 +22,7 @@
         "corejs": {
           "version": 3
         },
-        "version": "^7.23.9"
+        "version": "^7.24.0"
       }
     ]
   ],

@@ -3,26 +3,25 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.24.0"
   },
-  "description": "Note wraps and parses a CSS <length> to use it as a number.",
   "exports": {
     ".": {
-      "types": "./dist/Note.d.ts",
-      "import": "./dist/Note.js",
-      "require": "./dist/Note.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./gebrauchsmusik": {
-      "types": "./dist/gebrauchsmusik.d.ts",
-      "import": "./dist/gebrauchsmusik.js"
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
     }
   },
   "license": "GPL-3.0-or-later",
-  "main": "./dist/Note.cjs",
-  "name": "@musiclike/note",
+  "main": "./dist/index.cjs",
+  "name": "@musiclike/programming",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
-    "directory": "./packages/musiclike-note",
+    "directory": "./packages/musiclike-programming",
     "type": "git",
     "url": "https://github.com/azizdawhat/musiclike.git"
   },
@@ -31,6 +30,6 @@
     "prebuild": "del --verbose \"./dist/*\""
   },
   "type": "module",
-  "types": "./dist/Note.d.ts",
+  "types": "./dist/index.d.ts",
   "version": "0.1.0"
 }
