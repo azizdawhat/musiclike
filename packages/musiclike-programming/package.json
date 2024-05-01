@@ -1,7 +1,7 @@
 {
   "author": "Aziz Da <azizdawhat@gmail.com>",
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.24.4"
+    "@babel/runtime-corejs3": "^7.24.5"
   },
   "exports": {
     ".": {
