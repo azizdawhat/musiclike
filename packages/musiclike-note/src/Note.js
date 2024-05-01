@@ -8,7 +8,7 @@ class Note {
    * @readonly
    * @static
    */
-  static get LenUNITS() {
+  static get UNITS() {
     return Object.freeze(
       /** @type {const} */ ([
         '%',
@@ -78,16 +78,16 @@ class Note {
 
   /**
    * @param {ConstructorParameters<typeof Note>[0]} length
-   * @returns {?(typeof Note)['LenUNITS'][number]}
+   * @returns {?(typeof Note)['UNITS'][number]}
    */
-  static parseLenUnit(length) {
-    const value = Number.parseFloat(length);
+  static parseUnit(length) {
+    const num = Number.parseFloat(length);
 
-    if (Number.isNaN(value)) {
+    if (Number.isNaN(num)) {
       return null;
     }
 
-    if (!Number.isFinite(value) || !value) {
+    if (!Number.isFinite(num) || !num) {
       return '';
     }
 
@@ -102,33 +102,33 @@ class Note {
   /**
    * @param {Note|number|string} length
    */
-  constructor(length, obj = /** @type {typeof Note} */ (this.constructor).parseLenUnit(length)) {
-    const value = Number.parseFloat(length);
+  constructor(length, unit = /** @type {typeof Note} */ (this.constructor).parseUnit(length)) {
+    const num = Number.parseFloat(length);
 
-    if (!Number.isFinite(value) || !value) {
-      this.#value = `${value}`;
+    if (!Number.isFinite(num) || !num) {
+      this.#value = `${num}`;
     } else {
       // eslint-disable-next-line no-lonely-if
       if (isString(length) || /** @type {typeof Note} */ (this.constructor).isNote(length)) {
         this.#value = `${length}`;
       } else {
-        const lenUnit = `${obj}`.trim();
+        const partialRValue = `${unit}`.trim();
         // prettier-ignore
-        if (!isObject(obj) && !isString(obj)) {
+        if (!isObject(unit) && !isString(unit)) {
           throw new TypeError([
-            `Cannot convert "${lenUnit}" to a supported CSS <length> unit!`,
-            `${this.constructor.name}() constructor takes an arguments[1] of type string`,
-            'or an arguments[1] of type object and converts it to a value of type string.',
+            `Cannot convert ${partialRValue} to a supported CSS <length> unit!`,
+            `${this.constructor.name}() constructor takes an arguments[0] of type string`,
+            'or an arguments[0] of type object and converts it to a value of type string.',
           ].join(' '), {
-            cause: { value: obj },
+            cause: { value: unit },
           });
         }
 
         try {
-          JSON.parse(lenUnit);
+          JSON.parse(partialRValue);
         } catch {
-          if (lenUnit !== {}.toString.apply(obj)) {
-            this.#value = `${value}${lenUnit}`;
+          if (partialRValue !== {}.toString.apply(unit)) {
+            this.#value = `${num}${partialRValue}`;
           }
         }
       }
@@ -138,10 +138,10 @@ class Note {
   /**
    * @param {number} [fractionDigits]
    * @returns {Note}
-   */ // prettier-ignore
+   */
   @construct
   toExponential(fractionDigits) {
-    return `${(+this).toExponential(fractionDigits)}${/** @type {typeof Note} */ (this.constructor).parseLenUnit(this)}`;
+    return `${(+this).toExponential(fractionDigits)}${/** @type {typeof Note} */ (this.constructor).parseUnit(this)}`;
   }
 
   /**
@@ -150,7 +150,7 @@ class Note {
    */
   @construct
   toFixed(digits) {
-    return `${(+this).toFixed(digits)}${/** @type {typeof Note} */ (this.constructor).parseLenUnit(this)}`;
+    return `${(+this).toFixed(digits)}${/** @type {typeof Note} */ (this.constructor).parseUnit(this)}`;
   }
 
   /**
@@ -159,7 +159,7 @@ class Note {
    */
   @construct
   toPrecision(precision) {
-    return `${(+this).toPrecision(precision)}${/** @type {typeof Note} */ (this.constructor).parseLenUnit(this)}`;
+    return `${(+this).toPrecision(precision)}${/** @type {typeof Note} */ (this.constructor).parseUnit(this)}`;
   }
 
   /**
